@@ -1,6 +1,8 @@
 import gurobipy as gp
 from gurobipy import GRB
 
+from print_solution import print_solution
+
 model = gp.Model("service_technicians")
 
 experienced_technicians_in_month_1 = model.addVar(lb=0, ub=GRB.INFINITY, vtype=GRB.CONTINUOUS, name="experienced_technicians_in_month_1")
@@ -30,14 +32,4 @@ model.setObjective(2000 * (experienced_technicians_in_month_1 + experienced_tech
 
 model.optimize()
 
-if model.SolCount > 0:
-    print(f"Objective value: {model.objVal:.2f}")
-    all_vars = model.getVars()
-    values = model.getAttr("X", all_vars)
-    names = model.getAttr("VarName", all_vars)
-
-    for name, val in zip(names, values):
-        print(f"{name} = {val:.2f}")
-else:
-    print("No solution found.")
-        
+print_solution(model)

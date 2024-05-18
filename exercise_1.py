@@ -1,6 +1,8 @@
 import gurobipy as gp
 from gurobipy import GRB
 
+from print_solution import print_solution
+
 model = gp.Model("study_hours")
 
 subject_1_first_30_hours = model.addVar(lb= 0, ub=30, vtype=GRB.CONTINUOUS, name="subject_1_first_30_hours")
@@ -23,13 +25,4 @@ model.setObjective(grade_subject_1 + grade_subject_2 + grade_subject_3, GRB.MINI
 
 model.optimize()
 
-if model.SolCount > 0:
-    print(f"Objective value: {model.objVal:.2f}")
-    all_vars = model.getVars()
-    values = model.getAttr("X", all_vars)
-    names = model.getAttr("VarName", all_vars)
-
-    for name, val in zip(names, values):
-        print(f"{name} = {val:.2f}")
-else:
-    print("No solution found.")
+print_solution(model)
